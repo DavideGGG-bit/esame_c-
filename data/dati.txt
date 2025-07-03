@@ -1,0 +1,10 @@
+Stipendio gennaio;1500.00;2024-01-01
+Spesa supermercato;-65.50;2024-01-02
+Benzina auto;-45.00;2024-01-03
+Bolletta luce;-80.25;2024-01-05
+Cena ristorante;-35.00;2024-01-07
+Bonus freelance;300.00;2024-01-10
+Farmacia medicine;-25.80;2024-01-12
+Affitto appartamento;-600.00;2024-01-15
+Spesa alimentari;-45.30;2024-01-18
+Regalo compleanno;-50.00;2024-01-20
