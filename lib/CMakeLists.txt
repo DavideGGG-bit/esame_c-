@@ -1,0 +1,1 @@
+add_library(conto_corrente_lib SHARED transazione.cpp contocorrente.cpp)
