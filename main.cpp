@@ -20,16 +20,53 @@ void mostraMenu() {
     cout << "Scegli un'opzione: ";
 }
 
-// Funzione per validare il formato della data (semplice controllo)
+// Funzione per validare il formato della data (controllo completo)
 bool validaData(const string& data) {
     if (data.length() != 10) return false;
     if (data[4] != '-' || data[7] != '-') return false;
     
-    // Controllo basic che siano numeri nelle posizioni giuste
+    // Controllo che siano numeri nelle posizioni giuste
     for (int i = 0; i < 10; i++) {
         if (i == 4 || i == 7) continue;
         if (!isdigit(data[i])) return false;
     }
+    
+    // Estrai anno, mese e giorno
+    string annoStr = data.substr(0, 4);
+    string meseStr = data.substr(5, 2);
+    string giornoStr = data.substr(8, 2);
+    
+    int anno = stoi(annoStr);
+    int mese = stoi(meseStr);
+    int giorno = stoi(giornoStr);
+    
+    // Validazione mese (1-12)
+    if (mese < 1 || mese > 12) {
+        cout << "Errore: Il mese deve essere compreso tra 1 e 12!" << endl;
+        return false;
+    }
+    
+    // Validazione giorno (1-31)
+    if (giorno < 1 || giorno > 31) {
+        cout << "Errore: Il giorno deve essere compreso tra 1 e 31!" << endl;
+        return false;
+    }
+    
+    // Validazione giorni per mesi specifici
+    if (mese == 2) {  // Febbraio
+        // Controllo anno bisestile semplificato
+        bool bisestile = (anno % 4 == 0 && anno % 100 != 0) || (anno % 400 == 0);
+        if (giorno > (bisestile ? 29 : 28)) {
+            cout << "Errore: Febbraio " << (bisestile ? "ha massimo 29 giorni!" : "ha massimo 28 giorni!") << endl;
+            return false;
+        }
+    } else if (mese == 4 || mese == 6 || mese == 9 || mese == 11) {  // Aprile, Giugno, Settembre, Novembre
+        if (giorno > 30) {
+            cout << "Errore: Questo mese ha massimo 30 giorni!" << endl;
+            return false;
+        }
+    }
+    
     return true;
 }
 
@@ -40,21 +77,42 @@ void aggiungiTransazione(ContoCorrente& conto) {
     
     cout << "\n=== AGGIUNGI TRANSAZIONE ===" << endl;
     
-    cout << "Descrizione: ";
-    cin.ignore();  // Pulisce il buffer
-    getline(cin, descrizione);
+    // Input descrizione con validazione
+    do {
+        cout << "Descrizione: ";
+        cin.ignore();  // Pulisce il buffer
+        getline(cin, descrizione);
+        
+        if (descrizione.empty()) {
+            cout << "Errore: La descrizione non può essere vuota!" << endl;
+        }
+    } while (descrizione.empty());
     
-    cout << "Importo (positivo per entrate, negativo per uscite): ";
-    cin >> importo;
+    // Input importo con validazione
+    bool importoValido = false;
+    do {
+        cout << "Importo (positivo per entrate, negativo per uscite): ";
+        if (cin >> importo) {
+            importoValido = true;
+        } else {
+            cout << "Errore: Inserisci un numero valido!" << endl;
+            cin.clear();  // Pulisce lo stato di errore
+            cin.ignore(1000, '\n');  // Ignora i caratteri rimasti nel buffer
+        }
+    } while (!importoValido);
     
-    cout << "Data (YYYY-MM-DD): ";
-    cin >> data;
-    
-    // Validazione della data
-    if (!validaData(data)) {
-        cout << "Formato data non valido! Usa YYYY-MM-DD" << endl;
-        return;
-    }
+    // Input data con validazione
+    bool dataValida = false;
+    do {
+        cout << "Data (YYYY-MM-DD): ";
+        cin >> data;
+        
+        if (validaData(data)) {
+            dataValida = true;
+        } else {
+            cout << "Formato data non valido! Usa YYYY-MM-DD (es. 2024-12-31)" << endl;
+        }
+    } while (!dataValida);
     
     conto.aggiungiTransazione(descrizione, importo, data);
     cout << "Transazione aggiunta con successo!" << endl;
@@ -63,13 +121,18 @@ void aggiungiTransazione(ContoCorrente& conto) {
 // Funzione per cercare transazioni per data
 void cercaPerData(const ContoCorrente& conto) {
     string data;
-    cout << "\nInserisci la data da cercare (YYYY-MM-DD): ";
-    cin >> data;
+    bool dataValida = false;
     
-    if (!validaData(data)) {
-        cout << "Formato data non valido! Usa YYYY-MM-DD" << endl;
-        return;
-    }
+    do {
+        cout << "\nInserisci la data da cercare (YYYY-MM-DD): ";
+        cin >> data;
+        
+        if (validaData(data)) {
+            dataValida = true;
+        } else {
+            cout << "Formato data non valido! Usa YYYY-MM-DD (es. 2024-12-31)" << endl;
+        }
+    } while (!dataValida);
     
     vector<Transazione> risultati = conto.cercaPerData(data);
     
@@ -86,9 +149,16 @@ void cercaPerData(const ContoCorrente& conto) {
 // Funzione per cercare transazioni per parola chiave
 void cercaPerParolaChiave(const ContoCorrente& conto) {
     string parola;
-    cout << "\nInserisci la parola chiave da cercare: ";
-    cin.ignore();
-    getline(cin, parola);
+    
+    do {
+        cout << "\nInserisci la parola chiave da cercare: ";
+        cin.ignore();
+        getline(cin, parola);
+        
+        if (parola.empty()) {
+            cout << "Errore: La parola chiave non può essere vuota!" << endl;
+        }
+    } while (parola.empty());
     
     vector<Transazione> risultati = conto.cercaPerParolaChiave(parola);
     
@@ -112,7 +182,22 @@ int main() {
     int scelta;
     do {
         mostraMenu();
-        cin >> scelta;
+        
+        // Validazione input del menu
+        bool sceltaValida = false;
+        do {
+            if (cin >> scelta) {
+                if (scelta >= 0 && scelta <= 7) {
+                    sceltaValida = true;
+                } else {
+                    cout << "Opzione non valida! Inserisci un numero tra 0 e 7: ";
+                }
+            } else {
+                cout << "Errore: Inserisci un numero valido (0-7): ";
+                cin.clear();  // Pulisce lo stato di errore
+                cin.ignore(1000, '\n');  // Ignora i caratteri rimasti nel buffer
+            }
+        } while (!sceltaValida);
         
         switch (scelta) {
             case 1:
