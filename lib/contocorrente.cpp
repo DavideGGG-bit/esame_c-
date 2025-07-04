@@ -6,23 +6,45 @@
 
 using namespace std;
 
-// Costruttore
+/**
+ * @brief Costruttore del conto corrente
+ * @param file Nome del file per la persistenza dei dati
+ * 
+ * Imposta il nome del file e carica automaticamente le transazioni esistenti
+ */
 ContoCorrente::ContoCorrente(const string& file) : nomeFile(file) {
     caricaDaFile();  // Carica le transazioni all'avvio
 }
 
-// Aggiunge una transazione esistente
+/**
+ * @brief Aggiunge una transazione esistente al conto
+ * @param t Transazione da aggiungere
+ * 
+ * Aggiunge la transazione al vettore delle transazioni
+ */
 void ContoCorrente::aggiungiTransazione(const Transazione& t) {
     transazioni.push_back(t);
 }
 
-// Aggiunge una nuova transazione con i parametri
+/**
+ * @brief Aggiunge una nuova transazione con i parametri specificati
+ * @param desc Descrizione della transazione
+ * @param importo Importo della transazione
+ * @param data Data della transazione
+ * 
+ * Crea una nuova transazione e la aggiunge al vettore
+ */
 void ContoCorrente::aggiungiTransazione(const string& desc, double importo, const string& data) {
     Transazione t(desc, importo, data);
     transazioni.push_back(t);
 }
 
-// Calcola il saldo totale sommando tutti gli importi
+/**
+ * @brief Calcola il saldo totale sommando tutti gli importi
+ * @return double Saldo totale del conto
+ * 
+ * Somma algebrica di tutti gli importi delle transazioni
+ */
 double ContoCorrente::calcolaSaldo() const {
     double saldo = 0.0;
     for (const Transazione& t : transazioni) {
@@ -31,7 +53,13 @@ double ContoCorrente::calcolaSaldo() const {
     return saldo;
 }
 
-// Cerca transazioni per data
+/**
+ * @brief Cerca transazioni per data specifica
+ * @param data Data da cercare in formato YYYY-MM-DD
+ * @return vector<Transazione> Vettore delle transazioni trovate
+ * 
+ * Confronta la data esatta di ogni transazione con quella specificata
+ */
 vector<Transazione> ContoCorrente::cercaPerData(const string& data) const {
     vector<Transazione> risultati;
     for (const Transazione& t : transazioni) {
@@ -42,7 +70,13 @@ vector<Transazione> ContoCorrente::cercaPerData(const string& data) const {
     return risultati;
 }
 
-// Cerca transazioni per parola chiave nella descrizione
+/**
+ * @brief Cerca transazioni per parola chiave nella descrizione
+ * @param parola Parola chiave da cercare
+ * @return vector<Transazione> Vettore delle transazioni che contengono la parola
+ * 
+ * Utilizza il metodo contieneParolaChiave di ogni transazione
+ */
 vector<Transazione> ContoCorrente::cercaPerParolaChiave(const string& parola) const {
     vector<Transazione> risultati;
     for (const Transazione& t : transazioni) {
@@ -53,7 +87,12 @@ vector<Transazione> ContoCorrente::cercaPerParolaChiave(const string& parola) co
     return risultati;
 }
 
-// Carica le transazioni dal file
+/**
+ * @brief Carica le transazioni dal file specificato
+ * 
+ * Legge il file riga per riga e converte ogni riga in una transazione
+ * usando il metodo fromString. Gestisce errori di lettura e formato.
+ */
 void ContoCorrente::caricaDaFile() {
     ifstream file(nomeFile);
     if (!file.is_open()) {
@@ -78,7 +117,13 @@ void ContoCorrente::caricaDaFile() {
     cout << "Caricate " << count << " transazioni dal file." << endl;
 }
 
-// Salva le transazioni su file
+/**
+ * @brief Salva le transazioni su file
+ * 
+ * Crea la directory se non esiste, poi salva ogni transazione
+ * usando il metodo toString. Gestisce errori di creazione directory
+ * e di scrittura file.
+ */
 void ContoCorrente::salvaSuFile() const {
     // Crea la directory se non esiste
     filesystem::path filePath(nomeFile);
@@ -107,16 +152,28 @@ void ContoCorrente::salvaSuFile() const {
     cout << "Transazioni salvate nel file " << nomeFile << endl;
 }
 
-// Getter
+/**
+ * @brief Getter per tutte le transazioni
+ * @return vector<Transazione> Copia del vettore delle transazioni
+ */
 vector<Transazione> ContoCorrente::getTransazioni() const {
     return transazioni;
 }
 
+/**
+ * @brief Getter per il numero di transazioni
+ * @return int Numero totale di transazioni
+ */
 int ContoCorrente::getNumeroTransazioni() const {
     return transazioni.size();
 }
 
-// Stampa tutte le transazioni
+/**
+ * @brief Stampa tutte le transazioni in formato tabellare
+ * 
+ * Mostra le transazioni in una tabella formattata con colonne:
+ * Data, Importo, Descrizione
+ */
 void ContoCorrente::stampaTransazioni() const {
     if (transazioni.empty()) {
         cout << "Nessuna transazione presente." << endl;
@@ -134,7 +191,12 @@ void ContoCorrente::stampaTransazioni() const {
     }
 }
 
-// Stampa un riepilogo del conto
+/**
+ * @brief Stampa un riepilogo completo del conto
+ * 
+ * Mostra: numero transazioni, saldo attuale, totale entrate, totale uscite
+ * Calcola separatamente entrate (importi positivi) e uscite (importi negativi)
+ */
 void ContoCorrente::stampaRiepilogo() const {
     cout << "\n=== RIEPILOGO CONTO ===" << endl;
     cout << "Numero transazioni: " << transazioni.size() << endl;

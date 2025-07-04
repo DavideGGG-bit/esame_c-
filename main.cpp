@@ -6,7 +6,11 @@
 
 using namespace std;
 
-// Funzione per mostrare il menu principale
+/**
+ * @brief Mostra il menu principale dell'applicazione
+ * 
+ * Visualizza tutte le opzioni disponibili per l'utente
+ */
 void mostraMenu() {
     cout << "\n=== GESTIONE CONTO CORRENTE ===" << endl;
     cout << "1. Aggiungi transazione" << endl;
@@ -20,7 +24,15 @@ void mostraMenu() {
     cout << "Scegli un'opzione: ";
 }
 
-// Funzione per validare il formato della data (controllo completo)
+/**
+ * @brief Valida il formato della data
+ * @param data Stringa da validare
+ * @return bool true se la data è valida, false altrimenti
+ * 
+ * Controlla che la data sia nel formato YYYY-MM-DD e che
+ * contenga valori validi per anno, mese e giorno.
+ * Include controlli per anni bisestili e giorni per mese.
+ */
 bool validaData(const string& data) {
     if (data.length() != 10) return false;
     if (data[4] != '-' || data[7] != '-') return false;
@@ -70,7 +82,13 @@ bool validaData(const string& data) {
     return true;
 }
 
-// Funzione per aggiungere una nuova transazione
+/**
+ * @brief Gestisce l'aggiunta di una nuova transazione
+ * @param conto Riferimento al conto corrente
+ * 
+ * Raccoglie input dall'utente per descrizione, importo e data
+ * con validazione completa dei dati inseriti
+ */
 void aggiungiTransazione(ContoCorrente& conto) {
     string descrizione, data;
     double importo;
@@ -118,7 +136,13 @@ void aggiungiTransazione(ContoCorrente& conto) {
     cout << "Transazione aggiunta con successo!" << endl;
 }
 
-// Funzione per cercare transazioni per data
+/**
+ * @brief Gestisce la ricerca di transazioni per data
+ * @param conto Riferimento costante al conto corrente
+ * 
+ * Richiede all'utente una data e mostra tutte le transazioni
+ * di quella data specifica
+ */
 void cercaPerData(const ContoCorrente& conto) {
     string data;
     bool dataValida = false;
@@ -146,7 +170,13 @@ void cercaPerData(const ContoCorrente& conto) {
     }
 }
 
-// Funzione per cercare transazioni per parola chiave
+/**
+ * @brief Gestisce la ricerca di transazioni per parola chiave
+ * @param conto Riferimento costante al conto corrente
+ * 
+ * Richiede all'utente una parola chiave e mostra tutte le transazioni
+ * che contengono quella parola nella descrizione
+ */
 void cercaPerParolaChiave(const ContoCorrente& conto) {
     string parola;
     
@@ -173,6 +203,14 @@ void cercaPerParolaChiave(const ContoCorrente& conto) {
     }
 }
 
+/**
+ * @brief Funzione principale dell'applicazione
+ * @return int Codice di uscita (0 = successo)
+ * 
+ * Gestisce il menu principale e l'interazione con l'utente.
+ * Crea un'istanza del conto corrente e gestisce tutte le operazioni
+ * disponibili attraverso un menu interattivo.
+ */
 int main() {
     cout << "Benvenuto nel sistema di gestione conto corrente!" << endl;
     
