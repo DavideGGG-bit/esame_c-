@@ -1,6 +1,7 @@
 #include "transazione.h"
 #include <sstream>
 #include <cctype>
+#include <iomanip>
 
 using namespace std;
 
@@ -41,7 +42,10 @@ void Transazione::setData(const string& dt) {
 
 // Converte la transazione in stringa per il salvataggio su file
 string Transazione::toString() const {
-    return descrizione + ";" + to_string(importo) + ";" + data;
+    // Formatta l'importo con 2 cifre decimali
+    stringstream ss;
+    ss << fixed << setprecision(2) << importo;
+    return descrizione + ";" + ss.str() + ";" + data;
 }
 
 // Crea una transazione da una stringa letta dal file
