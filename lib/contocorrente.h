@@ -14,7 +14,7 @@ private:
 
 public:
     // Costruttore
-    ContoCorrente(const string& file = "data/dati.txt");
+    ContoCorrente(const string& file = "../data/dati.txt");
     
     // Metodi per gestire le transazioni
     void aggiungiTransazione(const Transazione& t);

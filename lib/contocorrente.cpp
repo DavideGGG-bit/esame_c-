@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <filesystem>
 
 using namespace std;
 
@@ -79,6 +80,20 @@ void ContoCorrente::caricaDaFile() {
 
 // Salva le transazioni su file
 void ContoCorrente::salvaSuFile() const {
+    // Crea la directory se non esiste
+    filesystem::path filePath(nomeFile);
+    filesystem::path directory = filePath.parent_path();
+    
+    if (!directory.empty() && !filesystem::exists(directory)) {
+        try {
+            filesystem::create_directories(directory);
+            cout << "Directory creata: " << directory << endl;
+        } catch (const filesystem::filesystem_error& e) {
+            cout << "Errore nella creazione della directory: " << e.what() << endl;
+            return;
+        }
+    }
+    
     ofstream file(nomeFile);
     if (!file.is_open()) {
         cout << "Errore nell'apertura del file per la scrittura!" << endl;

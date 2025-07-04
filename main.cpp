@@ -107,7 +107,7 @@ int main() {
     cout << "Benvenuto nel sistema di gestione conto corrente!" << endl;
     
     // Crea il conto corrente (carica automaticamente dal file)
-    ContoCorrente conto("data/dati.txt");
+    ContoCorrente conto("../data/dati.txt");
     
     int scelta;
     do {
