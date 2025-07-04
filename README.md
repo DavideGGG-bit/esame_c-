@@ -84,7 +84,7 @@ La classe `ContoCorrente` gestisce un insieme di transazioni e le operazioni ass
 - **Google Test Framework**: Per i test unitari (libgtest-dev)
 - **CMake**: Sistema di build (versione 3.10 o superiore)
 
-## Compilazione ed esecuzione
+## Compilazione ed esecuzione in locale
 
 ### Prerequisiti
 ```bash
@@ -126,3 +126,6 @@ Il programma include validazione completa per:
 - **Importi**: Controllo che siano numeri validi
 - **Descrizioni**: Controllo che non siano vuote
 - **Menu**: Validazione delle opzioni selezionate
+
+## Importante
+Nel file [test/CMakeLists.txt](test/CMakeLists.txt) sono presenti le configurazioni per fare i test in locale e su Google Colab,quando usa una delle due configurazioni, commentare o eliminare l'altra.
